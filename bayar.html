@@ -42,37 +42,27 @@
   const urlParams = new URLSearchParams(window.location.search);
   const orderId = urlParams.get('orderId');
 
-  window.konfirmasiPembayaran = async function(buttonElement) {
+  window.onload = async function() {
     if (orderId) {
-       const originalText = buttonElement.innerText;
-       buttonElement.innerText = "Memproses...";
-       buttonElement.disabled = true;
-
        try {
            await update(ref(db, "orders/" + orderId), { 
                status: 'sedang_dimasak' 
            });
-           
-           buttonElement.innerText = "Berhasil Terbayar!";
-           buttonElement.style.backgroundColor = "#16a34a";
-           alert("Pembayaran Berhasil! Layar kasir (laptop) akan otomatis terupdate.");
+           document.body.innerHTML = `
+               <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; text-align: center;">
+                   <div style="font-size: 60px; color: #16a34a;">✅</div>
+                   <h1 style="color: #333;">Pembayaran Berhasil!</h1>
+                   <p style="color: #666;">Layar kasir akan otomatis terupdate. Terima kasih!</p>
+               </div>
+           `;
        } catch (error) {
            console.error("Error Firebase:", error);
-           buttonElement.innerText = originalText;
-           buttonElement.disabled = false;
-           alert("Gagal mengonfirmasi pembayaran. Periksa koneksi internet.");
+           document.body.innerHTML = `<h2 style="color: red; text-align: center; margin-top: 50px;">Gagal mengonfirmasi. Periksa koneksi internet.</h2>`;
        }
     } else {
-       alert("Simulasi Gagal: ID Pesanan tidak ditemukan. Pastikan kamu scan dari layar laptop.");
+       document.body.innerHTML = `<h2 style="color: orange; text-align: center; margin-top: 50px;">Silakan scan QR dari layar laptop.</h2>`;
     }
   }
 </script>
-<div style="text-align: center; margin-top: 20px;">
-    <button onclick="window.konfirmasiPembayaran(this)" 
-            style="padding: 12px 24px; background: #007aff; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        Simulasi Bayar di HP
-    </button>
-</div>
-
 </body>
 </html>
