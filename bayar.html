@@ -25,7 +25,6 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
   const firebaseConfig = {
     apiKey: "AIzaSyA422KuGv-lJ86IJrjAxo67OeM8QOfpdZ4",
     authDomain: "imk-fando-aufa.firebaseapp.com",
@@ -35,13 +34,10 @@
     messagingSenderId: "142656276642",
     appId: "1:142656276642:web:bfa43814f9f5f2155beffb"
   };
-
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-
   const urlParams = new URLSearchParams(window.location.search);
   const orderId = urlParams.get('orderId');
-
   window.onload = async function() {
     if (orderId) {
        try {
@@ -49,11 +45,8 @@
                status: 'sedang_dimasak' 
            });
        } catch (error) {
-           console.error("Error Firebase:", error);
-           document.body.innerHTML = `<h2 style="color: red; text-align: center; margin-top: 50px;">Gagal mengonfirmasi. Periksa koneksi internet.</h2>`;
+           console.error("Gagal update status:", error);
        }
-    } else {
-       document.body.innerHTML = `<h2 style="color: orange; text-align: center; margin-top: 50px;">Silakan scan QR dari layar laptop.</h2>`;
     }
   }
 </script>
