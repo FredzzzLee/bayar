@@ -22,5 +22,57 @@
 </head>
 <body>
     <img src="RISPEK SUDAH MEMBAYAR😎😎👍.jpg" alt="Rispek Sudah Membayar">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA422KuGv-lJ86IJrjAxo67OeM8QOfpdZ4",
+    authDomain: "imk-fando-aufa.firebaseapp.com",
+    databaseURL: "https://imk-fando-aufa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "imk-fando-aufa",
+    storageBucket: "imk-fando-aufa.firebasestorage.app",
+    messagingSenderId: "142656276642",
+    appId: "1:142656276642:web:bfa43814f9f5f2155beffb"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderId = urlParams.get('orderId');
+
+  window.konfirmasiPembayaran = async function(buttonElement) {
+    if (orderId) {
+       const originalText = buttonElement.innerText;
+       buttonElement.innerText = "Memproses...";
+       buttonElement.disabled = true;
+
+       try {
+           await update(ref(db, "orders/" + orderId), { 
+               status: 'sedang_dimasak' 
+           });
+           
+           buttonElement.innerText = "Berhasil Terbayar!";
+           buttonElement.style.backgroundColor = "#16a34a";
+           alert("Pembayaran Berhasil! Layar kasir (laptop) akan otomatis terupdate.");
+       } catch (error) {
+           console.error("Error Firebase:", error);
+           buttonElement.innerText = originalText;
+           buttonElement.disabled = false;
+           alert("Gagal mengonfirmasi pembayaran. Periksa koneksi internet.");
+       }
+    } else {
+       alert("Simulasi Gagal: ID Pesanan tidak ditemukan. Pastikan kamu scan dari layar laptop.");
+    }
+  }
+</script>
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="window.konfirmasiPembayaran(this)" 
+            style="padding: 12px 24px; background: #007aff; color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        Simulasi Bayar di HP
+    </button>
+</div>
+
 </body>
 </html>
